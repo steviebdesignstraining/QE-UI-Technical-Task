@@ -19,9 +19,11 @@ jobs:
   test-and-deploy:
     name: Playwright Tests & Deploy to GitHub Pages
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     env:
       BASE_URL: ${{ secrets.BASE_URL || 'https://www.gov.uk/calculate-your-holiday-entitlement' }}
       TIMEOUT: ${{ secrets.TIMEOUT || '30000' }}
@@ -34,8 +36,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
-          cache-dependency-path: 'Playwright_test/package-lock.json'
+          cache: npm
+          cache-dependency-path: Playwright_test/package-lock.json
 
       - name: Install dependencies
         working-directory: ./Playwright_test
@@ -48,6 +50,7 @@ jobs:
       - name: Run Playwright tests
         id: playwright_tests
         working-directory: ./Playwright_test
+        continue-on-error: true
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "▶ STARTING PLAYWRIGHT TESTS"
@@ -66,19 +69,25 @@ jobs:
           if [ -f "ortoni-report/ortoni-report.html" ]; then
             echo "✅ Ortoni report generated"
           else
-            echo "⚠️ Ortoni report not found"
+            echo "❌ Ortoni report not found"
+            exit 1
           fi
-        continue-on-error: true
 
-      - name: Prepare and copy site content
+      - name: Prepare site content
         run: |
           echo "📦 Preparing site directory..."
           mkdir -p site
-          
-          if [ -f "Playwright_test/ortoni-report/ortoni-report.html" ]; then
-            echo "📄 Copying Ortoni report..."
-            cp Playwright_test/ortoni-report/ortoni-report.html site/index.html
-            echo "✅ Ortoni report copied to site/index.html"
-          else
-            echo "⚠️ Generating fallback HTML..."
-            cat > site/index.html << 'EOF'
+
+          echo "📄 Copying Ortoni report..."
+          cp Playwright_test/ortoni-report/ortoni-report.html site/index.html
+
+          echo "✅ Report copied to site/index.html"
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
