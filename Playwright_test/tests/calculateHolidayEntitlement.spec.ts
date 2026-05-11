@@ -56,6 +56,12 @@ test.describe("Calculate Holiday Entitlement Page", () => {
     entitlementTypePage = new EntitlementTypePage(page);
     // Navigate to the specific holiday entitlement calculator URL
     await page.goto("https://www.gov.uk/calculate-your-holiday-entitlement");
+
+    // Accept cookies if the banner is present
+    if (await generalPage.acceptCookies.isVisible()) {
+      await generalPage.clickAcceptCookies();
+      await page.waitForLoadState("networkidle");
+    }
   });
 
   test("calculate holiday entitlement correctly for valid inputs with irregular hours", async ({
@@ -417,5 +423,4 @@ test.describe("Calculate Holiday Entitlement Page", () => {
     // Scroll to ensure error is visible
     await dayInput.scrollIntoViewIfNeeded();
   });
-  test("No answers provided for employment start date question", () => {});
 });
