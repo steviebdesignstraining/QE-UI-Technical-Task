@@ -1,0 +1,307 @@
+name: QA CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  REPORT_ROOT: site
+  GITHUB_SHA: ${{ github.sha }}
+  GITHUB_REF: ${{ github.ref }}
+  GITHUB_RUN_ID: ${{ github.run_id }}
+  GITHUB_RUN_NUMBER: ${{ github.run_number }}
+  GITHUB_WORKFLOW: ${{ github.workflow }}
+  GITHUB_EVENT_NAME: ${{ github.event_name }}
+
+jobs:
+  playwright:
+    name: Playwright UI & API Tests
+    runs-on: ubuntu-latest
+    environment: Playwright standard Env
+    env:
+      BASE_URL: ${{ secrets.BASE_URL || 'https://www.gov.uk/calculate-your-holiday-entitlement' }}
+      TIMEOUT: ${{ secrets.TIMEOUT || '30000' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        id: playwright_tests
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "▶ STARTING PLAYWRIGHT TESTS"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "🔧 Test Configuration:"
+          echo "   BASE_URL: ${BASE_URL}"
+          echo "   TIMEOUT: ${TIMEOUT}"
+          echo ""
+          echo "📋 Test Files to Execute:"
+          find tests -name "*.spec.ts" -type f
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+
+          # Run tests with multiple reporters
+          if npx playwright test \
+            --reporter=list \
+            --reporter=ortoni-report \
+            --reporter=html; then
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "✅ PLAYWRIGHT TESTS PASSED"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "PLAYWRIGHT_STATUS=PASSED" >> $GITHUB_ENV
+            echo "playwright_status=PASSED" >> $GITHUB_OUTPUT
+          else
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "❌ PLAYWRIGHT TESTS FAILED"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "PLAYWRIGHT_STATUS=FAILED" >> $GITHUB_ENV
+            echo "playwright_status=FAILED" >> $GITHUB_OUTPUT
+          fi
+
+          # Generate Ortoni report if not already generated
+          if [ ! -f "ortoni-report/ortoni-report.html" ]; then
+            echo "📄 Generating Ortoni report..."
+            npx ortoni generate --output ortoni-report/ortoni-report.html || echo "⚠️ Ortoni generation failed"
+          else
+            echo "✅ Ortoni report already exists at ortoni-report/ortoni-report.html"
+          fi
+        continue-on-error: true
+
+      - name: Verify Ortoni report was generated
+        run: |
+          echo "🔍 Verifying Ortoni report generation..."
+          if [ -f "ortoni-report/ortoni-report.html" ]; then
+            echo "✅ ortoni-report/ortoni-report.html found ($(stat -c%s ortoni-report/ortoni-report.html 2>/dev/null || stat -f%z ortoni-report/ortoni-report.html) bytes)"
+            echo "ORTONI_REPORT_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "❌ ortoni-report/ortoni-report.html NOT found"
+            echo "Available files:"
+            find . -name "ortoni-report.html" -o -name "*ortoni*" 2>/dev/null || echo "No ortoni files found"
+            echo "ORTONI_REPORT_EXISTS=false" >> $GITHUB_ENV
+            echo "⚠️ Will use fallback dashboard"
+          fi
+
+      - name: Prepare site structure
+        run: |
+          echo "📦 Preparing site directory structure..."
+          mkdir -p site/reports
+          echo "✅ Site structure created"
+
+      - name: Copy Ortoni report as main index
+        run: |
+          echo "📄 Setting up Ortoni report as main GitHub Pages index..."
+          if [ -f "ortoni-report/ortoni-report.html" ]; then
+            echo "✅ Found ortoni-report/ortoni-report.html"
+            echo "   Copying to site/index.html"
+            cp ortoni-report/ortoni-report.html site/index.html
+            echo "✅ Ortoni report is now the main site index"
+
+            # Copy the entire ortoni-report directory to preserve assets
+            if [ -d "ortoni-report" ]; then
+              echo "✅ Copying ortoni-report directory to site/reports/"
+              cp -r ortoni-report site/reports/
+            fi
+
+            # Also copy any assets or resources
+            if [ -d "ortoni-report/assets" ]; then
+              echo "✅ Copying ortoni-report assets to site/"
+              cp -r ortoni-report/assets site/
+            fi
+          else
+            echo "❌ ortoni-report/ortoni-report.html not found"
+            echo "🔍 Searching for ortoni files..."
+            find . -name "ortoni-report.html" -o -name "*ortoni*" 2>/dev/null || echo "No ortoni files found"
+            echo "⚠️ Fallback dashboard will be generated in deploy job"
+          fi
+
+      - name: Copy additional Playwright reports
+        run: |
+          echo "📂 Copying additional Playwright reports..."
+
+          # Copy playwright-report directory if it exists
+          if [ -d "playwright-report" ]; then
+            echo "✅ Found playwright-report/ directory"
+            mkdir -p site/reports/playwright
+            cp -r playwright-report/* site/reports/playwright/ 2>/dev/null || true
+          fi
+
+          # Copy any other reports directory
+          if [ -d "reports" ]; then
+            echo "✅ Found reports/ directory"
+            cp -r reports/* site/reports/ 2>/dev/null || true
+          fi
+
+          echo ""
+          echo "📊 Final site structure:"
+          ls -lh site/ 2>/dev/null || echo "Empty"
+          ls -lh site/reports/ 2>/dev/null || echo "No reports"
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-site
+          path: site
+          retention-days: 30
+
+      - name: Playwright test summary
+        if: always()
+        run: |
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📊 PLAYWRIGHT TEST EXECUTION SUMMARY"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "Status: ${{ env.PLAYWRIGHT_STATUS }}"
+          echo "Ortoni Report: ${{ env.ORTONI_REPORT_EXISTS }}"
+          echo ""
+          echo "Test Files Executed:"
+          find tests -name "*.spec.ts" -type f | while read file; do
+            echo "   - $file"
+          done
+          echo ""
+          echo "Reports Generated:"
+          find site -name "*.html" -type f | while read file; do
+            echo "   - $file ($(stat -c%s $file 2>/dev/null || stat -f%z $file) bytes)"
+          done
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+    outputs:
+      playwright_status: ${{ steps.playwright_tests.outputs.playwright_status }}
+      ortoni_exists: ${{ env.ORTONI_REPORT_EXISTS }}
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: playwright
+    if: always()
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download Playwright site
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-site
+          path: site
+        continue-on-error: true
+        if: always()
+
+      - name: Verify Ortoni report is main index
+        run: |
+          echo "🔍 Verifying deployment setup..."
+
+          if [ -f "site/index.html" ]; then
+            if grep -q "ortoni" site/index.html 2>/dev/null; then
+              echo "✅ site/index.html is the Ortoni report!"
+              echo "   Size: $(stat -c%s site/index.html 2>/dev/null || stat -f%z site/index.html) bytes"
+              echo "ORTONI_DEPLOYED=true" >> $GITHUB_ENV
+            else
+              echo "⚠️ site/index.html exists but is not Ortoni report"
+              echo "ORTONI_DEPLOYED=false" >> $GITHUB_ENV
+            fi
+          else
+            echo "❌ site/index.html not found - generating fallback"
+            echo "ORTONI_DEPLOYED=false" >> $GITHUB_ENV
+          fi
+
+      - name: Generate fallback dashboard if needed
+        if: env.ORTONI_DEPLOYED != 'true'
+        env:
+          PLAYWRIGHT_STATUS: ${{ needs.playwright.outputs.playwright_status || 'UNKNOWN' }}
+          BASE_URL: ${{ secrets.BASE_URL || 'https://www.gov.uk/calculate-your-holiday-entitlement' }}
+        run: |
+          echo "⚠️ Ortoni report not found, generating fallback dashboard..."
+          node scripts/generate-fallback.js || echo "Fallback generation failed"
+
+      - name: Verify final deployment
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🔍 FINAL DEPLOYMENT VERIFICATION"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+
+          if [ ! -f "site/index.html" ]; then
+            echo "❌ CRITICAL: site/index.html not found!"
+            exit 1
+          fi
+
+          echo "✅ site/index.html exists"
+          echo "   Size: $(stat -c%s site/index.html 2>/dev/null || stat -f%z site/index.html) bytes"
+          echo ""
+
+          if grep -q "ortoni" site/index.html 2>/dev/null; then
+            echo "✅ Deploying ORTONI REPORT as main site"
+          else
+            echo "⚠️ Deploying fallback dashboard"
+          fi
+          echo ""
+
+          echo "📂 Complete site structure:"
+          tree site -L 2 2>/dev/null || find site -type f
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Deployment summary
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ DEPLOYMENT SUCCESSFUL!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "🌐 GitHub Pages URL:"
+          echo "   ${{ steps.deployment.outputs.page_url }}"
+          echo ""
+          echo "📊 Test Status:"
+          echo "   Playwright: ${{ needs.playwright.outputs.playwright_status || 'UNKNOWN' }}"
+          echo "   Ortoni Report: ${{ needs.playwright.outputs.ortoni_exists }}"
+          echo ""
+
+          if [ "${{ env.ORTONI_DEPLOYED }}" = "true" ]; then
+            echo "✅ Main site is ORTONI REPORT"
+          else
+            echo "⚠️ Main site is fallback dashboard"
+          fi
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
