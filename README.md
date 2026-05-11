@@ -1,8 +1,8 @@
-# 🚀 Stephen Bennett's QA Automation Project
+# Stephen Bennett's QA Automation Project
 
 [](https://github.com/steviebdesignstraining/waracle_takehome_Test/actions/workflows/main.yml/badge.svg)
 
-## 👋 Introduction
+## Introduction
 
 ![Stephen_.png](https://github.com/steviebdesignstraining/waracle_takehome_Test/raw/main/Stephen_.png)
 
@@ -14,7 +14,7 @@ Let's dive into what I've accomplished\!
 
 -----
 
-## 🎯 Project Overview
+## Project Overview
 
 This project showcases automating a public-facing UK Government webpage, 'Calculate your holiday entitlement'. Please write a working automated UI test suite.
 
@@ -29,7 +29,7 @@ We are looking for a demonstration of your technical skills, your ability to wri
 
 The URL for 'Calculate your holiday entitlement': https://www.gov.uk/calculate-your-holiday-entitlement
 
-### 🔍 Scope of Automation
+### Scope of Automation
 
 My automated tests cover positive and negative scenarios utilising the POM (Page Object Model).
 
@@ -40,7 +40,7 @@ The tests are meticulously implemented **Playwright with Typescript**, adhering 
 
 -----
 
-## 📋 Manual Test Plan
+## Manual Test Plan
 
 As mentioned, I've created a detailed **manual test plan** that outlines the key user flows, cases, and scenarios that have been automated. This plan ensures that all critical functionalities of the gov website are thoroughly tested and serves as a blueprint for the automated scripts.
 
@@ -48,11 +48,11 @@ As mentioned, I've created a detailed **manual test plan** that outlines the key
 
 -----
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 A comprehensive end-to-end testing framework built with Playwright for UI testing of the UK Government's "Calculate your holiday entitlement" service.
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 1. **Clone the repository**:
    ```bash
@@ -112,7 +112,7 @@ Playwright_test/
 └── tsconfig.json    # TypeScript configuration
 ```
 
-## ✨ Features & Best Practices
+## Features & Best Practices
 
 - **TypeScript Support**: Full TypeScript implementation with robust type checking
 - **Page Object Model (POM)**: A maintainable and scalable test architecture
@@ -133,7 +133,7 @@ Playwright_test/
 | SLOWMO     | Slow down operations (ms)      | 0                                          |
 | TIMEOUT    | Test timeout (ms)              | 30000                                      |
 
-## 🚀 CI/CD Pipeline and Report Dashboard
+## CI/CD Pipeline and Report Dashboard
 
 ```bash
 # View test reports
@@ -162,7 +162,7 @@ See the notion document for 24 identified accessibility issues in the bonus task
 
 -----
 
-## 📋 Best Practices Summary
+## Best Practices Summary
 
 1. **Page Object Model**: For a highly maintainable and scalable test structure
 2. **TypeScript**: Ensures type safety and provides a superior developer experience
