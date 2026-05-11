@@ -8,7 +8,7 @@
 
 Hi there\! Before we blast off into the code-verse, I want to introduce myself. My name is **Stephen Bennett**, and I've been immersed in the world of testing for over **12 years**. I genuinely enjoy the development space and bringing a positive, optimistic, and adaptable spirit to any team. I'm sociable and thrive in diverse environments, working well with all personalities.
 
-First off, I absolutely **loved** completing this take-home test\! I got a bit carried away and ended up building **two** automation frameworks: one with **Playwright**. 
+First off, I absolutely **loved** completing this take-home test\! I got carried away and built two automation frameworks: one with **Playwright**. 
 
 Let's dive into what I've accomplished\!
 
@@ -18,7 +18,7 @@ Let's dive into what I've accomplished\!
 
 This project showcases automating a public-facing UK Government webpage, 'Calculate your holiday entitlement'. Please write a working automated UI test suite.
 
-You have autonomy on this task; the only remits are that you keep to the language and tools we have mentioned, that you provide a working solution, and clear instructions on how to build and execute your solution.
+You have autonomy on this task. The only requirements are that you use the language and tools we mentioned, provide a working solution, and include clear instructions on how to build and execute your solution.
 
 We are looking for a demonstration of your technical skills, your ability to write a clear working solution that can be shared, and your 'tester mindset'. We would like to see evidence of:
 
@@ -116,7 +116,7 @@ Playwright_test/
 
 - **TypeScript Support**: Full TypeScript implementation with robust type checking
 - **Page Object Model (POM)**: A maintainable and scalable test architecture
-- **Centralized Selectors**: All selectors in dedicated files for easy maintenance
+- **Centralised Selectors**: All selectors in dedicated files for easy maintenance
 - **Environment Configuration**: Flexible test environments via `.env`
 - **Dynamic Calculation Validation**: Tests validate results against business logic
 - **Accessibility Testing**: axe-core integration for accessibility checks
@@ -151,7 +151,7 @@ Accessibility testing is integrated using `@axe-core/playwright`. The framework 
 - Color contrast ratios
 - Keyboard navigation
 
-See the main repository README for 24 identified accessibility issues in the bonus task.
+See the notion document for 24 identified accessibility issues in the bonus task.
 
 ## Troubleshooting
 
@@ -166,7 +166,7 @@ See the main repository README for 24 identified accessibility issues in the bon
 
 1. **Page Object Model**: For a highly maintainable and scalable test structure
 2. **TypeScript**: Ensures type safety and provides a superior developer experience
-3. **Centralized Selectors**: All selectors in dedicated files for easy maintenance
+3. **Centralised Selectors**: All selectors in dedicated files for easy maintenance
 4. **Dynamic Calculation Validation**: Tests validate results against business logic
 5. **Environment Configuration**: Offers flexibility for different testing environments
 6. **Comprehensive Error Handling**: Robust management of test failures
