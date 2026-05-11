@@ -320,7 +320,7 @@ test.describe("Calculate Holiday Entitlement Page", () => {
     expect(daysValue).toBe(testDaysWorkedPerWeek);
   });
 
-test("Allow user to change answers and start again", async ({ page }) => {
+  test("Allow user to change answers and start again", async ({ page }) => {
     // 1. Navigate to calculator URL (handled by beforeEach)
 
     // 2. Verify page title
@@ -331,7 +331,8 @@ test("Allow user to change answers and start again", async ({ page }) => {
     await holidayPage.clickStartNow();
 
     // 4. Verify page title - Does the employee work irregular hours or for part of the year?
-    const irregularHoursHeader = await holidayPage.irregularHours.getHeaderText();
+    const irregularHoursHeader =
+      await holidayPage.irregularHours.getHeaderText();
     expect(irregularHoursHeader).toContain(
       "Does the employee work irregular hours or for part of the year?",
     );
@@ -355,7 +356,9 @@ test("Allow user to change answers and start again", async ({ page }) => {
 
     // 10. Verify page title - How many hours has the employee worked in the pay period?
     const hoursHeader = await holidayPage.hoursPayPeriod.getHeaderText();
-    expect(hoursHeader).toContain("How many hours has the employee worked in the pay period?");
+    expect(hoursHeader).toContain(
+      "How many hours has the employee worked in the pay period?",
+    );
 
     // 11. Enter hoursPayPeriod into input field
     await holidayPage.hoursPayPeriod.fillHours(validAnswers.hoursPayPeriod);
@@ -368,7 +371,9 @@ test("Allow user to change answers and start again", async ({ page }) => {
     expect(isInfoPageLoaded).toBeTruthy();
 
     // 14. Click change for How many hours has the employee worked in the pay period?
-    await infoPage.clickChangeFor("How many hours has the employee worked in the pay period?");
+    await infoPage.clickChangeFor(
+      "How many hours has the employee worked in the pay period?",
+    );
 
     // 15. Change value in input to a different value than previously entered.
     const newHours = validAnswers.hoursPayPeriod + 5;
@@ -412,4 +417,5 @@ test("Allow user to change answers and start again", async ({ page }) => {
     // Scroll to ensure error is visible
     await dayInput.scrollIntoViewIfNeeded();
   });
+  test("No answers provided for employment start date question", () => {});
 });

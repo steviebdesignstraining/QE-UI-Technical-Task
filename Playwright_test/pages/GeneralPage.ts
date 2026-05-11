@@ -8,9 +8,7 @@ export class GeneralPage {
   readonly acceptCookies: Locator;
   readonly rejectCookies: Locator;
   readonly viewCookies: Locator;
-  readonly changeIrregular: Locator;
-  readonly changeYearStart: Locator;
-  readonly changeHoursPayPeriod: Locator;
+  readonly changeLinks: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -20,9 +18,7 @@ export class GeneralPage {
     this.acceptCookies = page.locator(s.acceptCookies);
     this.rejectCookies = page.locator(s.rejectCookies);
     this.viewCookies = page.locator(s.viewCookies);
-    this.changeIrregular = page.locator(s.changeIrregular);
-    this.changeYearStart = page.locator(s.changeYearStart);
-    this.changeHoursPayPeriod = page.locator(s.changeHoursPayPeriod);
+    this.changeLinks = page.locator(s.changeLink);
   }
 
   /**
@@ -72,28 +68,31 @@ export class GeneralPage {
     await this.viewCookies.click();
   }
 
-  /**
-   * Click the Change link for irregular hours question
-   */
+/**
+    * Click the Change link for irregular hours question
+    */
   async clickChangeIrregular(): Promise<void> {
-    await this.changeIrregular.first().click();
+    const links = await this.changeLinks.all();
+    if (links.length > 0) {
+      await links[0].click();
+    }
   }
 
-  /**
-   * Click the Change link for leave year start question
-   */
+/**
+    * Click the Change link for leave year start question
+    */
   async clickChangeYearStart(): Promise<void> {
-    const links = await this.changeYearStart.all();
+    const links = await this.changeLinks.all();
     if (links.length > 1) {
       await links[1].click();
     }
   }
 
 /**
-    * Click the Change link for hours pay period question
-    */
+     * Click the Change link for hours pay period question
+     */
   async clickChangeHoursPayPeriod(): Promise<void> {
-    const links = await this.changeHoursPayPeriod.all();
+    const links = await this.changeLinks.all();
     // Find the change link associated with hours pay period (usually the 3rd row's change link)
     if (links.length >= 3) {
       await links[2].click();

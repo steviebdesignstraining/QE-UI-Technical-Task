@@ -31,27 +31,25 @@ export const informationBasedAnswersSelectors = {
   // Specific summary items
   irregularHoursSummary: {
     key: 'dt:has-text("Does the employee work irregular hours or for part of the year?")',
-    value: 'dd:has-text("Yes")', // Value will vary
+    value: 'dd:has-text("Yes")',
     changeLink: 'a.govuk-link:has-text("Change")',
   },
   
   leaveYearSummary: {
     key: 'dt:has-text("When does the leave year start?")',
-    value: 'dd:has-text("5 April 2026")', // Value will vary
+    value: 'dd:has-text("5 April 2026")',
     changeLink: 'a.govuk-link:has-text("Change")',
   },
   
   hoursPayPeriodSummary: {
     key: 'dt:has-text("How many hours has the employee worked in the pay period?")',
-    value: 'dd:has-text("14")', // Value will vary
+    value: 'dd:has-text("14")',
     changeLink: 'a.govuk-link:has-text("Change")',
   },
   
   // Locator alternatives
   pageHeaderLocator: 'h1:has-text("Calculate holiday entitlement:")',
   informationHeaderLocator: 'h1:has-text("Information based on your answers")',
-  bodyTextLocator: 'div.govuk-govspeak',
-  summaryListLocator: 'dl.govuk-summary-list',
 } as const;
 
 export type InformationBasedAnswersSelectorKey = keyof typeof informationBasedAnswersSelectors;

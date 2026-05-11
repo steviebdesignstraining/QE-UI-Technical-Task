@@ -18,20 +18,15 @@ export const generalSelectors = {
   // View cookies link
   viewCookies: 'a.govuk-link:has-text("View cookies")',
   
-  // Change links in summary list
-  changeIrregular: 'a.govuk-link:has-text("Change")',
-  changeYearStart: 'a.govuk-link:has-text("Change")',
-  changeHoursPayPeriod: 'a.govuk-link:has-text("Change")',
-  
-  // Generic change link (for any change action)
+// Change links in summary list (target change links within summary list rows)
   changeLink: 'a.govuk-link',
-  
+
   // Change irregular hours link (specific XPath for leave year page)
   changeIrregularHours: '//dd[@class=\'govuk-summary-list__actions\']//a[@class=\'govuk-link\']',
-  
+
   // Continue button (shared across all pages)
   continueButton: { role: 'button', name: 'Continue' },
-  
+
   // Continue button locator alternative (text-based)
   continueLocator: 'button:has-text("Continue")',
 } as const;
