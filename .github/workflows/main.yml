@@ -15,9 +15,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-env:
-  REPORT_ROOT: site
-
 jobs:
   test-and-deploy:
     name: Playwright Tests & Deploy to GitHub Pages
@@ -53,49 +50,35 @@ jobs:
         working-directory: ./Playwright_test
         run: |
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "▶ STARTING PLAYWRIGHT TESTS."
+          echo "▶ STARTING PLAYWRIGHT TESTS"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           echo "BASE_URL: ${BASE_URL}"
           echo ""
 
           if npx playwright test --reporter=list --reporter=ortoni-report --reporter=html; then
-            echo "✅ PLAYWRIGHT TESTS PASSED."
+            echo "✅ PLAYWRIGHT TESTS PASSED"
             echo "PLAYWRIGHT_STATUS=PASSED" >> $GITHUB_ENV
-            echo "playwright_status=PASSED" >> $GITHUB_OUTPUT
           else
-            echo "❌ PLAYWRIGHT TESTS FAILED."
+            echo "❌ PLAYWRIGHT TESTS FAILED"
             echo "PLAYWRIGHT_STATUS=FAILED" >> $GITHUB_ENV
-            echo "playwright_status=FAILED" >> $GITHUB_OUTPUT
           fi
 
           if [ -f "ortoni-report/ortoni-report.html" ]; then
-            echo "✅ Ortoni report generated."
+            echo "✅ Ortoni report generated"
           else
-            echo "⚠️ Ortoni report not found."
+            echo "⚠️ Ortoni report not found"
           fi
         continue-on-error: true
 
-      - name: Prepare site structure
-        working-directory: ./Playwright_test
+      - name: Prepare and copy site content
         run: |
           echo "📦 Preparing site directory..."
-          mkdir -p ../site
-          echo "✅ Site directory created."
-
-      - name: Copy Ortoni report as main index
-        working-directory: ./Playwright_test
-        run: |
-          echo "📄 Setting up Ortoni report..."
-          if [ -f "ortoni-report/ortoni-report.html" ]; then
-            cp ortoni-report/ortoni-report.html ../site/index.html
+          mkdir -p site
+          
+          if [ -f "Playwright_test/ortoni-report/ortoni-report.html" ]; then
+            echo "📄 Copying Ortoni report..."
+            cp Playwright_test/ortoni-report/ortoni-report.html site/index.html
             echo "✅ Ortoni report copied to site/index.html"
           else
-            echo "⚠️ No Ortoni report found."
-          fi
-
-      - name: Generate fallback if needed
-        run: |
-          if [ ! -f "site/index.html" ]; then
             echo "⚠️ Generating fallback HTML..."
-            mkdir -p site
             cat > site/index.html << 'EOF'
