@@ -1,105 +1,174 @@
-# MaPS QE UI Technical Task
+# 🚀 Stephen Bennett's QA Automation Project
 
-Your task is to create a functional automated UI test suite using Playwright with Typescript. 
+[](https://github.com/steviebdesignstraining/waracle_takehome_Test/actions/workflows/main.yml/badge.svg)
 
-There are no trick questions; we want to see your solution work, analyse your code structure, and understand your thought process.
+## 👋 Introduction
 
-## 📝 The Task - Part 1
+![Stephen_.png](https://github.com/steviebdesignstraining/waracle_takehome_Test/raw/main/Stephen_.png)
 
-On a public facing UK Government webpage 'Calculate your holiday entitlement', please write a working automated UI test suite. 
+Hi there\! Before we blast off into the code-verse, I want to introduce myself. My name is **Stephen Bennett**, and I've been immersed in the world of testing for over **12 years**. I genuinely enjoy the development space and bringing a positive, optimistic, and adaptable spirit to any team. I'm sociable and thrive in diverse environments, working well with all personalities.
 
-You have autonomy on this task, the only remits are that you keep to the language and tools we have mentioned, that you provide a working solution and clear instructions on how to build and execute your solution.
+First off, I absolutely **loved** completing this take-home test\! I got a bit carried away and ended up building **two** automation frameworks: one with **Cypress**, **Playwright** and **Postman**. 
+
+Let's dive into what I've accomplished\!
+
+-----
+
+## 🎯 Project Overview
+
+This project showcases automating a public-facing UK Government webpage, 'Calculate your holiday entitlement'. Please write a working automated UI test suite.
+
+You have autonomy on this task; the only remits are that you keep to the language and tools we have mentioned, that you provide a working solution, and clear instructions on how to build and execute your solution.
 
 We are looking for a demonstration of your technical skills, your ability to write a clear working solution that can be shared, and your 'tester mindset'. We would like to see evidence of:
-* Maintenable Code
-* Readable Code
-* Scalable Code
-* Best Practices
 
-The URL for 'Calculate your holiday entitlement': https://www.gov.uk/calculate-your-holiday-entitlement
+- Maintainable Code
+- Readable Code
+- Scalable Code
+- Best Practices
 
-## 🎢 The Task - Part 2 (bonus task)
+The URL for 'Calculate your holiday entitlement': https://www.gov.uk/calculate-your-holiday-entitlement
 
-At MaPS, we prioritise Accessibility. While we understand that not everyone may meet our understanding of the subject, we are eager to gauge your knowledge and awareness in this area.
+### 🔍 Scope of Automation
 
-Task two is to launch the basic web page we have created 'index.html' and provide us with a list of Accessibility issues/bugs you can find.
+My automated tests cover positive and negative scenarios utilising the POM (Page Object Model).
 
-You can provide your list of answers anywhere you like, but tell us where you have put them. (e.g. within you README.md). Finally please provide at least one of them in the format of a Bug report. (doesn't have to be more then 1 in this format, the others can just be a quick list).
 
-#### Page Launch Instructions
+The tests are meticulously implemented **Playwright with Typescript**, adhering to best practices in automation and QA. 
 
-To launch the page locally, follow these simple steps:
+🔗 **Calculate your holiday entitlement**: [[https://www.gov.uk/calculate-your-holiday-entitlement]]
 
-1. Install dependencies:
+-----
+
+## 📋 Manual Test Plan
+
+As mentioned, I've created a detailed **manual test plan** that outlines the key user flows, cases, and scenarios that have been automated. This plan ensures that all critical functionalities of the gov website are thoroughly tested and serves as a blueprint for the automated scripts.
+
+📖 **View the Test Plan / Bug report**: [(https://www.notion.so/MaPS-QE-UI-Technical-Task-35b40221abc0807081c8d63fee58f6ed?source=copy_link))
+
+-----
+
+## 🛠️ Setup Instructions
+
+A comprehensive end-to-end testing framework built with Playwright for UI testing of the UK Government's "Calculate your holiday entitlement" service.
+
+## 🛠️ Setup Instructions
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/moneyadviceservice/QE-UI-Technical-Task.git
+   ```
+
+2. **Navigate to the project directory**:
+   ```bash
+   cd QE-UI-Technical-Task/Playwright_test
+   ```
+
+3. **Install dependencies**:
    ```bash
    npm install
    ```
-2. Start the application:
-   ```bash
-   npm start
-   ```
-3. Open your web browser and navigate to:
-   ```bash
-   http://localhost:8080/
-   ```
 
-## 🕗 Time Allocation
+## Running Tests
 
-There's no strict time limit for completing this task before the specified deadline given, we don't expect an extensive number of tests, but a well-rounded selection is appreciated.
+| Command                      | Description                                    |
+| :--------------------------- | :--------------------------------------------- |
+| `npm test`                   | Run all tests                                  |
+| `npm run test:ui`            | Run tests in UI mode (interactive)             |
+| `npm run test:headed`        | Run tests in headed mode (see browser)         |
+| `npm run test:debug`         | Run tests in debug mode                        |
+| `npm run test:chromium`      | Run tests in Chromium browser                    |
+| `npm run test:firefox`       | Run tests in Firefox browser                     |
+| `npm run test:webkit`        | Run tests in WebKit browser                      |
+| `npm run test:all`           | Run tests across all browsers                    |
+| `npm run test:report`        | View HTML test report                            |
+| `npm run typecheck`          | Run TypeScript type checking                     |
+| `npm run lint`               | Lint the test code                               |
 
-If you have the time and inclination, feel free to attempt Task 2 (bonus task), also provide any additional thoughts on your framework solution, with any further considerations you would take in to account if you had more time.
+## Test Report
 
-## 🐞 Task 2 - Accessibility Audit Findings
+After running tests, view the HTML report:
 
-After running automated accessibility testing using axe-core and manual inspection on http://localhost:8080/, the following 24 accessibility and functionality issues were identified:
+```bash
+npm run test:report
+```
 
-### Accessibility Issues Table
+The report will be available in `playwright-report/` directory.
 
-| Bug Description | Steps | Expected Result | Actual Result | Console Log Evidence |
-|-----------------|-------|-----------------|---------------|---------------------|
-| Missing DOCTYPE declaration | View page source | Document should start with `<!DOCTYPE html>` | First line is `<html>` without doctype | Manual code inspection |
-| Missing `<title>` element | Navigate to page | Document should have a descriptive title | `<title>` element is missing from `<head>` | axe-core violation: `document-title` (impact: serious) |
-| Missing `lang` attribute on `<html>` | Navigate to page | `<html>` should have `lang` attribute (e.g., `lang="en"`) | `<html>` element has no `lang` attribute | axe-core violation: `html-has-lang` (impact: serious) |
-| Missing charset meta tag | View page source | `<meta charset="UTF-8">` should be present | No charset meta tag in document | Manual code inspection |
-| Missing viewport meta tag | View on mobile | Should be responsive on mobile devices | No viewport meta tag found | Manual code inspection |
-| Missing image alternative text | Navigate with screen reader | Image should have descriptive alt text | `<img>` element has no `alt` attribute | axe-core violation: `image-alt` (impact: critical) |
-| Form input "Full name" lacks label | Focus with screen reader | Input should have programmatic label | Only placeholder text, no `<label>` element | Screen reader announces no label |
-| Form input "Email" lacks label | Focus with screen reader | Input should have programmatic label | Only placeholder text, no `<label>` element | Screen reader announces no label |
-| Textarea "Your message" lacks label | Focus with screen reader | Textarea should have programmatic label | Only placeholder text, no `<label>` element | Screen reader announces no label |
-| Button has `type="button"` | Click submit | Button should submit the form | Button type is "button", not "submit" | `<button type="button">` |
-| Form missing `action` attribute | Submit form | Form should define where to send data | `<form>` has no action attribute | `<form>` element has no action |
-| Form missing `method` attribute | Submit form | Form method should be defined (GET/POST) | `<form>` has no method attribute | `<form>` element has no method |
-| Missing H1 heading | Navigate with screen reader | Page should have H1 for main title | Only H2 present, no H1 | Document structure check |
-| Emoji 🎉 in button may confuse screen readers | Navigate with screen reader | Text should be meaningful | Emoji announced as "party popper" | Manual code inspection |
-| Inline onclick handler without function | Click button | Should have defined JavaScript function | `submitForm()` is called but likely undefined | Manual code inspection |
-| No main landmark | Navigate with screen reader | Page should have `<main>` element | No main landmark or role="main" | Landmark navigation check |
-| Missing skip navigation link | Keyboard navigation | Should have skip link for keyboard users | No skip navigation link found | Keyboard navigation test |
-| Spelling error "Accesibility" | Read page content | Should say "Accessibility" | Typo present in H2 | Manual code inspection |
-| Button may lack visible focus indicator | Tab to button | Focus should be clearly visible | :focus state may not show outline | CSS inspection |
-| Fixed width layout not responsive | View on mobile | Layout should be responsive | Form uses fixed 800px width | CSS inspection |
-| Input fields missing `name` attributes | Form submission | Fields need names for server-side processing | Inputs have no name attributes | Form data cannot be properly validated |
-| Button type prevents form submission | Click Done button | Form should be submitable | Button type="button" prevents submission | User cannot submit the form |
-| Inline onclick event handler | Click button | Should use proper event listeners | Inline JavaScript presents XSS risk | Security concern with inline handlers |
-| No form validation constraints | Submit invalid data | Should validate email format | Email input has no pattern validation | Invalid data could be submitted |
+## Project Structure
 
----
+```
+Playwright_test/
+├── pages/           # Page Object Models (POM)
+├── selectors/       # Centralized selectors and locators
+├── tests/           # Test specifications
+├── test_data/       # Test data files
+├── utils/           # Utility functions and helpers
+├── playwright-report/  # HTML test reports (generated)
+├── test-results/    # Test results and artifacts (generated)
+├── .env             # Environment variables
+├── package.json     # Project dependencies and scripts
+├── playwright.config.ts  # Playwright configuration
+└── tsconfig.json    # TypeScript configuration
+```
 
-### Bug Report Format (Critical Issue)
+## ✨ Features & Best Practices
 
-| Field | Details |
-|-------|---------|
-| **Bug ID** | A11Y-001 |
-| **Title** | Missing image alternative text on robot image |
-| **Severity** | Critical |
-| **WCAG Reference** | WCAG 2.1 Level A, Success Criterion 1.1.1 (Non-text Content) |
-| **Description** | The `<img>` element displaying the robot image lacks alternative text, which is essential for screen reader users to understand the content and purpose of the image. Without alt text, screen reader users will hear the filename "robot-3114245_1280.png" read aloud. |
-| **Steps to Reproduce** | 1. Navigate to http://localhost:8080/ 2. Inspect the robot image element 3. Observe that the `alt` attribute is missing |
-| **Expected Result** | The `<img>` element should have an `alt` attribute with descriptive text (e.g., `alt="Robot assistant icon"`) |
-| **Actual Result** | `<img class="contact-image" src="images/robot-3114245_1280.png">` has no `alt` attribute |
-| **Console Log Evidence** | axe-core output: `{ "id": "image-alt", "impact": "critical", "description": "Ensure <img> elements have alternative text or a role of none or presentation" }` |
+- **TypeScript Support**: Full TypeScript implementation with robust type checking
+- **Page Object Model (POM)**: A maintainable and scalable test architecture
+- **Centralized Selectors**: All selectors in dedicated files for easy maintenance
+- **Environment Configuration**: Flexible test environments via `.env`
+- **Dynamic Calculation Validation**: Tests validate results against business logic
+- **Accessibility Testing**: axe-core integration for accessibility checks
+- **Multiple Test Scenarios**: Covers irregular hours, part-year workers, and error handling
+- **Cross-browser Testing**: Support for Chromium, Firefox, and WebKit
+- **Ortoni Report**: Custom HTML reporting with test history
 
----
+## Environment Variables (.env)
 
-## 📨 Presenting/Submitting Your Solution
+| Variable   | Description                    | Default                                    |
+|------------|--------------------------------|--------------------------------------------|
+| BASE_URL   | Base URL for tests             | https://www.gov.uk/calculate-your-holiday-entitlement |
+| HEADLESS   | Run tests in headless mode     | true                                       |
+| SLOWMO     | Slow down operations (ms)      | 0                                          |
+| TIMEOUT    | Test timeout (ms)              | 30000                                      |
 
-Please download and email your solution from a private Github repository you have created and send the Zip back to us. Any issues please do get in touch with the recruiter you have been speaking with.
+## 🚀 CI/CD Pipeline and Report Dashboard
+
+```bash
+# View test reports
+npm run test:report
+```
+
+The framework integrates with GitHub Actions. Push to the repository to trigger automated test runs.
+
+## ♿ Accessibility Testing
+
+Accessibility testing is integrated using `@axe-core/playwright`. The framework follows WCAG 2.1 guidelines and includes checks for:
+
+- Image alternative text
+- Form labels and ARIA attributes
+- Color contrast ratios
+- Keyboard navigation
+
+See the main repository README for 24 identified accessibility issues in the bonus task.
+
+## Troubleshooting
+
+1. Always check test execution videos and screenshots in `test-results/`
+2. Review console output for detailed error messages
+3. Validate your environment configuration in the `.env` file
+4. Ensure all dependencies are properly installed (`npm install`)
+
+-----
+
+## 📋 Best Practices Summary
+
+1. **Page Object Model**: For a highly maintainable and scalable test structure
+2. **TypeScript**: Ensures type safety and provides a superior developer experience
+3. **Centralized Selectors**: All selectors in dedicated files for easy maintenance
+4. **Dynamic Calculation Validation**: Tests validate results against business logic
+5. **Environment Configuration**: Offers flexibility for different testing environments
+6. **Comprehensive Error Handling**: Robust management of test failures
+7. **Cross-browser Testing**: Ensures broad compatibility
+8. **Thorough Documentation**: Provides clear setup and usage guides
