@@ -100,7 +100,7 @@ The report will be available in `playwright-report/` directory.
 ```
 Playwright_test/
 ├── pages/           # Page Object Models (POM)
-├── selectors/       # Centralized selectors and locators
+├── selectors/       # Centralised selectors and locators
 ├── tests/           # Test specifications
 ├── test_data/       # Test data files
 ├── utils/           # Utility functions and helpers
