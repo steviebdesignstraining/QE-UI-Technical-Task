@@ -63,6 +63,38 @@ test.describe("Calculate Holiday Entitlement Page", () => {
       await page.waitForLoadState("networkidle");
     }
   });
+  test("Related content links work correctly", async ({ page }) => {
+    const relatedContentLinks = [
+      {
+        name: "Calculate your agricultural worker holiday entitlement",
+        navigateMethod: "navigateToAgriculturalWorker",
+      },
+      {
+        name: "Holiday entitlement",
+        navigateMethod: "navigateToHolidayEntitlement",
+      },
+      {
+        name: "Night working hours",
+        navigateMethod: "navigateToNightWorking",
+      },
+      {
+        name: "Sunday working",
+        navigateMethod: "navigateToSundayWorking",
+      },
+    ];
+
+    for (const link of relatedContentLinks) {
+      const [response] = await Promise.all([
+        page.waitForResponse((resp) => resp.status() === 200),
+        (holidayPage as any)[link.navigateMethod](),
+      ]);
+      expect(response.status()).toBe(200);
+      const pageTitle = await page.getByRole("heading", { level: 1 }).first().textContent();
+      expect(pageTitle?.trim()).toContain(link.name);
+      await page.goBack();
+      await page.waitForLoadState("networkidle");
+    }
+  });
 
   test("calculate holiday entitlement correctly for valid inputs with irregular hours", async ({
     page,
