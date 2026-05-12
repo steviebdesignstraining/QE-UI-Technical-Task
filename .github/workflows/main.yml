@@ -17,6 +17,7 @@ concurrency:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  TZ: UTC
 
 jobs:
   test-and-deploy:
@@ -80,6 +81,13 @@ jobs:
           echo "📦 Preparing Pages artifact..."
 
           mkdir -p site
+
+          # Fix lastRunDate to include UTC timezone indicator
+          # Ortoni-report formats dates without timezone info, which is confusing
+          REPORT_FILE="Playwright_test/ortoni-report/ortoni-report.html"
+          if [ -f "$REPORT_FILE" ]; then
+            sed -i 's/"lastRunDate":"\(May [0-9]*, [0-9]*, [0-9:]* [AP]M\)"/"lastRunDate":"\1 UTC"/g' "$REPORT_FILE"
+          fi
 
           cp Playwright_test/ortoni-report/ortoni-report.html site/index.html
 
